@@ -77,13 +77,13 @@ void SDCard::initsd() {
 #if defined(ENABLE_SOFTWARE_SPI_CLASS) && ENABLE_SOFTWARE_SPI_CLASS
 	fat.begin(SDSS);
 #else
-	fat.begin(SDSS, SD_SCK_MHZ(4)); // dummy init of SD_CARD
+	fat.begin(SDSS, SPI_DIV6_SPEED); // dummy init of SD_CARD (was SD_SCK_MHZ(4))
 #endif
     HAL::delayMilliseconds(50);       // wait for init end
     HAL::pingWatchdog();
     /*if(dir[0].isOpen())
         dir[0].close();*/
-    if (!fat.begin(SDSS, SD_SCK_MHZ(4))) {
+    if (!fat.begin(SDSS, SPI_DIV6_SPEED)) { // was SD_SCK_MHZ(4)
         Com::printFLN(Com::tSDInitFail);
         sdmode = 100; // prevent automount loop!
         if (fat.card()->errorCode()) {

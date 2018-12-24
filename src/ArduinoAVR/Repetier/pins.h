@@ -614,7 +614,7 @@ STEPPER_CURRENT_CONTROL
 #endif
 
 /****************************************************************************************
-* Ultimaker Shield pin assignment v1.5.7
+* Ultimaker Shield pin assignment v1.5.7 (modified for Wanhao D5S)
 *
 ****************************************************************************************/
 #if MOTHERBOARD == 37
@@ -640,14 +640,14 @@ STEPPER_CURRENT_CONTROL
 #define ORIG_Z_ENABLE_PIN 35
 
  // bed
-#define HEATER_1_PIN 4
-#define TEMP_1_PIN 10
+#define HEATER_1_PIN 6//4
+#define TEMP_1_PIN 9//10
 
-#define HEATER_0_PIN  2
-#define TEMP_0_PIN 8
+#define HEATER_0_PIN  5//2
+#define TEMP_0_PIN 8//8
 
-#define HEATER_2_PIN 3
-#define TEMP_2_PIN 9
+#define HEATER_2_PIN 7//3
+#define TEMP_2_PIN 10//9
 
 #define HEATER_3_PIN -1
 #define TEMP_3_PIN -1
@@ -664,9 +664,9 @@ STEPPER_CURRENT_CONTROL
 #define E1_FAN_PIN           -1
 //  #define EXT2_EXTRUDER_COOLER_PIN E1_FAN_PIN
 
-#define LED_PIN            13
-#define ORIG_FAN_PIN            7
-#define ORIG_PS_ON_PIN          12
+#define LED_PIN            -1//13
+#define ORIG_FAN_PIN            21//7
+#define ORIG_PS_ON_PIN          -1//12
 #define KILL_PIN           -1
 //PIN that has to be turned on right after start, to keep power flowing.
 #define SUICIDE_PIN        54  
@@ -676,7 +676,7 @@ STEPPER_CURRENT_CONTROL
 #define MOSI_PIN         51
 #define SDPOWER          -1
 #define SDSS             53
-#define ORIG_SDCARDDETECT	    38
+#define ORIG_SDCARDDETECT	    46//38
 
 #define E0_PINS ORIG_E0_STEP_PIN,ORIG_E0_DIR_PIN,ORIG_E0_ENABLE_PIN,
 #define E1_PINS ORIG_E1_STEP_PIN,ORIG_E1_DIR_PIN,ORIG_E1_ENABLE_PIN,
