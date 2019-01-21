@@ -1,125 +1,46 @@
-# Repetier-Firmware - the fast and user friendly firmware
+# Repetier-Firmware for D5S - the fast and user friendly firmware
 
-## Notes for developers/pull requests
+This repository contains a forked version of the original Repetier Version (1.0.3), which is specifically tailored for the Wanhao D5S series printers. For this to work the *pins.h* for the Ultimaker board was modified.
 
-This software is open source licensed under the GPL V3. As any free project we
-like contributions from other sources, especially since the firmware is very
-hardware related and many things can only be implemented/tested with the right
-hardware. To allow easy integration of new features you should follow some simple
-principals.
-1. Only send pull requests against development version. This is where we add
-and test new features and bug fixes. From time to time we push these to master
-as a new version.
-2. Do not include your personal configuration files. If you need new configuration
-options, add them to the official configuration.h file.
-3. We have two folders for different processor architectures. So for most
-changes modifications need to be in both folders. The general files are identical.
-In fact we develop on avr and just copy them to due. Only pins.h/fastio.h/hal.*
-and configuration.h are architecture dependent, so changes there need to be made
-twice and not copied.
-4. Document what your pull request will change/fix/introduce. Please also mention
-new configurations since we need to add them also to our online tool, so users
-can set them correctly.
+## Warning
+While this firmware should simply work, I advise against updating to it while you are busy with an important project. Things can go wrong or simply with the new firmware the printer might be over extruding (better do those calibration cubes to get it perfect again).
 
-.0 will be the last 1 version. Fixes for this will be done in the dev branch and
-moved to stable after a while as 1.0.x patch updates. With the release of the
-official 1.0 version we will start developing version 2.0 in the branch dev2
-where all the new features will be added.
+After updating to this firmware, please perform the following:
+* PID Tune - this allows your printer to maintain temperature.
+* Extrusion Calibration - ensure you are pushing the correct amount of filament to not be over or under extruding (this firmware allows E-steps calibration and then final adjustment from your slicer).
 
-### Version 2.0 information
+## Changes
+* Made to work with a D5S Mainboard and D5S screen (the screen uses non-standard pinouts and other requirements).
+* Made to use a 100k NTC 3950 thermistor in stead of the stock k-type thermocouple. In order to use this, you have to create a voltage divider board/circuit (I made mine from standard stip board - tutorial coming soon).
+* Features that I do not use, was disabled. You are welcome to configure these in the firmware.
+* The Configuration file is not Assistant Tool ready, but it contains full comments.
+* Buzzer have been disabled, is was getting irritating (but you can enable it).
+* Stopping a print will Home the head in the X direction (I hated the head just remaining where it was), before disabling the steppers.
+* EEPROM is enabled and thus a lot of values can be changed using Repetier Host. For subsequent changes, you may need to set the EEPROM mode to 1 or 2 (the number it is not currently).
+* Some people report having access to variable fan speed control while using this firmware.
 
-Version 2 will be a incompatible refactoring of version 1.0. We will try to keep
-commands and communication identical to 1.0, but for the configuration we see
-a much more flexible way that makes it much easier to adjust the firmware to
-nowadays needs. But that requires a different configuration at several parts.
+## Configuration
 
-Planned stages:
-1. Merge AVR and Due into one fileset.
-2. Split long files like boards, displays, languages in several files into a subfolder.
-    That way it gets much faster to search the right place.
-3. Update used libraries.
-4. Change configuration.
-5. Change motion planner.
-6. Create a config tool.
-7. Public testing with more users. We assume until a config tool is available the configuration
-will get several changes and only users with programming skills will do it manually
-to benefit already from improvements achieved.
+You are free to make changes to the *configuration.h* file, for example setting up special features. Options and features at:
 
-Until 6. the version should be considered alpha stage. We do expect errors from all
-the changes and there may be bigger mods with an update. Of course we will try
-to keep every release workable, but as work in progress there is no guarantee. 
+* [Extruder Configuration](https://github.com/Jacotheron/D5S-Repetier-Firmware/wiki/Extruder-Configuration)
+* [Movement Configuration](https://github.com/Jacotheron/D5S-Repetier-Firmware/wiki/Movement-Configuration)
+* [Other Configuration](https://github.com/Jacotheron/D5S-Repetier-Firmware/wiki/Misc-Configuration)
 
-## Installation
-                               
-Please use your configuration tool at 
-[http://www.repetier.com/firmware/v100](http://www.repetier.com/firmware/v100)
-or for latest 1.0.x development version at
-[http://www.repetier.com/firmware/dev](http://www.repetier.com/firmware/dev)
-for easy and fast configuration. You get the complete sources you need to compile from the online configurator.
-This system also allows it to upload configurations created with this tool and modify the configuration. This is handy for updates as you get all newly introduced parameter just by uploading the old version and downloading the
-latest version. New parameter are initalized with default values.
+While it is possible to make the D5S control a heatbed (through a Reprap.me Power Expander and separate power supply), this can only happen on the older mainboards (where there are more than one temperature sensing and control outputs). If your mainboard supports this, you can follow the guide.
 
-## Version 1.0.0
-* Fixed many autoleveling bugs.
-* More supported boards and displays.
-* Added CNC/Laser modes.
-* Improved event system to extend firmware without modification of files.
-* Dual X axis support (2 separate x axis)
-* New gcode handler for more flexible support of different inputs.
-* Improved menu.
-* Jam detection.
-* More stable temperature control with PID.
-* Per axis homing flag.
-* Keep alive signals for hosts.
-* Support capabilities protocol.
-* Many bug fixes.
-
-## Version 0.92.8 
-* Cleaner code base.
-* Pulse dense modulation for heater and fans.
-* Bed bump correction for delta printer.
-* Correction of parallelogram distortions.
-* Decoupling test for heater and sensor for more safety.
-* Mixing extruder support.
-* Test for watchdog.
-* Allow cold extrusion.
-* Fixed pause sd print issues.
-* Commands on sd stop.
-* Disable heaters/extruders on sd stop.
-* Safety question for sd stop.
-* Many minor corrections and improvements.
-* Extra motor drivers.
-* Event system for lights etc.
-* New homing sequence with preheat for nozzle based z sensors.
-* Language selectable on runtime.
-* Fix structure for Arduino 1.6.7
-* New bed leveling.
-* Fatal error handling added.
-
-## Version 0.91 released 2013-12-30
-
-WARNING: This version only compiles with older Arduino IDE 1.0.x, for
-compilation with newest version use 0.92
-
-Improvements over old code:
-* Better readable code.
-* Long filename support (from Glenn Kreisel).
-* Animated menu changes.
-* Separation of logic and hardware access to allow different processor architectures
-  by changing the hardware related files.
-* z-leveling support.
-* Mirroring of x,y and z motor.
-* Ditto printing.
-* Faster and better delta printing.
-* New heat manager (dead time control).
-* Removed OPS handling.
-* Full graphic display support.
-* Many bug fixes.
-* many other changes.
+* [Heatbed Configuration](https://github.com/Jacotheron/D5S-Repetier-Firmware/wiki/Heatbed-Configuration)
 
 ## Documentation
 
-For documentation please visit [http://www.repetier.com/documentation/repetier-firmware/](http://www.repetier.com/documentation/repetier-firmware/)
+For a Wiki, take a look at the original [Wiki](https://github.com/Jacotheron/D5S-Repetier-Firmware/wiki/)
+
+For official Repetier documentation please visit [http://www.repetier.com/documentation/repetier-firmware/](http://www.repetier.com/documentation/repetier-firmware/)
+
+In order to compile this, you will need Arduino IDE (the latest is able to compile this firmware). The D5S mainboard is an Arduino Mega 2560 compatible board (you will need to select it from the Tools menu).
+The firmware Arduino File is located in "Repetier/repetier.ino"
+
+For now the firmware will not be in a ready to flash file format - you have the source to help debug and contibute to the development.
 
 ## Developer
 
@@ -133,15 +54,11 @@ Other developers:
 - sdavi (first u8glib code implementation)
 - plus several small contributions from other users.
 
-## Introduction
+This D5S specific version is developed by Jaco Theron from XiliX Technologies.
 
-Repetier-Firmware is a firmware for RepRap like 3d-printer powered with
-an arduino compatible controller.
-This firmware is a nearly complete rewrite of the sprinter firmware by kliment
-which based on Tonokip RepRap firmware rewrite based off of Hydra-mmm firmware.
-Some ideas were also taken from Teacup, Grbl and Marlin.
+By default the printer will display "XiliX Tech" on the logo screen, you are allowed to remove or change this. This is just a small bit of credit to me - this firmware configuring, setup and testing took months to date.
 
-## Features
+## Repetier Features
 
 - Supports cartesian, delta and core xy/yz printers.
 - RAMP acceleration support.
@@ -149,14 +66,9 @@ Some ideas were also taken from Teacup, Grbl and Marlin.
 - Trajectory smoothing for smoother lines.
 - Nozzle pressure control for improved print quality with RAMPS.
 - Fast - 40000 Hz and more stepper frequency is possible with a 16 MHz AVR.
-- Support for Arduino Due based boards allowing much faster speeds. 
-- Multiple extruder supported (max. 6 extruder).
 - Standard ASCII and improved binary (Repetier protocol) communication.
 - Autodetect the command protocol, so it will work with any host software.
-- Important parameters are stored in EEPROM and can easily be modified without
-  recompilation of the firmware.
-- Automatic bed leveling.
-- Mixed extruder.
+- Important parameters are stored in EEPROM and can easily be modified without recompilation of the firmware.
 - Detection of heater/thermistor decoupling.
 - 2 fans plus thermistor controlled fan.
 - Multi-Language support, switchable at runtime.
@@ -187,6 +99,59 @@ firmware:
 For documentation and installation please visit 
 [http://www.repetier.com/documentation/repetier-firmware/](http://www.repetier.com/documentation/repetier-firmware/).
 
-## Changelog
+## Convert Temperature Sensor to Thermistor
 
-See changelog.txt
+I highly recommend changing from the Thermocouple to a Thermistor based temperature sensor for the following reasons:
+1. The thermocouple requires a thermocouple amp. This sits right above the head in the black pipe, and is prone to getting damaged and/or breaking after a while. It can be replaced, but again the replacement is also going to break at some point in time.
+2. Thermistors are cheap and accurate enough for the temperatures required for ABS and PLA filaments (going hotter than ABS temperatures on a D5 is looking for trouble and will damage the printer).
+3. Thermistors require a very small change to the mainboard - a simple 4.7k ohm surface mount resitor, soldered (there is an alternative method requiring a few extra components).
+4. Thermistors use a multi-core wire which can bend inside the pipe with no issues, and you do not have to check polarity (it is a simple resitor).
+
+I have created a guide to help you to do this mod with very little issues.
+
+[Voltage Divider Guide](https://github.com/Jacotheron/D5S-Repetier-Firmware/wiki/Voltage-Divider)
+
+# Changelog
+
+### v1.0rc1
+- enhancement: defaults to the Thermocouple Temperature sensor - since that is what the printer comes with, it is now the default.
+- enhancement: Pre-compiled a few common version of the firmware (stock with thermocouple; stock with thermistor; heatbed with thermistor) and also included the versions with Bootloaders. These are available in both .hex and .firm versions.
+- enhancement: Slicer Profiles included. I recommend Simplify 3D, but the price makes it not ideal for everyone. I included a Slic3r and CraftWare profile - these may need more work (pleease feel free to send me updated versions to include).
+- bug fix: Comments are back in the Configuration.H file - allowing you to easily see what can be changed and how to checnge them.
+- other: EEPROM Mode is now set to 1, which will erase your current EEPROM.
+- other: Performed compare with latest stable Repetier firmware version - applying changes.
+
+With this release, I am not expecting a lot of further changes, but just to be sure there are no bugs while performing these changes I am making this an RC (Release Candidate) version.
+
+### v1.0b5
+- enhancement: embed changelog in Readme
+- enhancement: offload Readme data to the Wiki, easier maintenance.
+- bug fix: printer shooting to left back corner on Pause - this was something the printer just did (uncommented the line).
+- bug fix: printer shooting to right back corner - this was due to too many decimal places in the Steps/MM, now reduced and tested.
+- bug fix: ranom weird characters on the display - this was due to all the languages getting compiled. English is now default, select only the language you want to use.
+- enhancement: Pausing the printer now raises the printer by 2mm (so the head does not melt the part). Resuming lowers with 2, to be at the correct place again.
+- enhancement: Stopping a print will raise the printer by 2mm, then Home in X.
+- enhancement: set E max acceleration to 3000, so that weaker stepper motors don't stall.
+- enhancement: increased decoupling test time to 30 seconds, should have a bit more user friendly when starting to heat while it is cooling.
+- enhancement: reduced the Max Jerk to 8, should give a bit better corners.
+- other: EEPROM Mode is now set to 2, which will erase your current EEPROM (save the time/filament usage before upgrade).
+
+
+### v1.0b4
+- fixed: X and Y steps per mm
+    * The D5 printers use a MXL timing belt and not the GT2 belt (as previously thought). The difference in pitch is very slightly, but can cause incorrectly sized objects (2mm for the GT2 vs 2.032mm for the MXL).
+
+### v1.0b3
+- enhancement: made the firmware multi-lingual
+    * The firmware supports compiling with all the languages ready to be used. Previously only the English translation was compiled (others were disabled).
+
+### pre v1.0b3
+Made the firmware compatible and a lot of other misc changes - these are lot logged here (but can be viewed in the Git history) since they are not important. The v1.0b2 was the first to be released publicly with minor bugs.
+
+# Donations
+
+I have created this firmware, since I needed it. I continue to improve on this firmware (adding more features, optimizing other features and settings), and will also offer support on it (through the Wanhao Google Group). All of this takes a lot of time and effort.
+
+If this firmware or my support helps you in any way, please considder a small donation.
+
+[![](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=872QV2XANTMME)
